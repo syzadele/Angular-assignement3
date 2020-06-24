@@ -12,7 +12,8 @@ function FoundItemsDirective () {
     templateUrl : "menuResult.html",
     scope: {
       found: '<',
-      onRemove: '&'
+      onRemove: '&',
+      nothingFound:'='
     }
   };
   return ddo;
@@ -27,19 +28,29 @@ function NarrowItDownController (MenuSearchService) {
 
   narrowItDownCtrl.searchTerm = "";
   narrowItDownCtrl.found = [];
+  narrowItDownCtrl.nothingFound = false;
+
   narrowItDownCtrl.getSearchItem = function () {
+    if (narrowItDownCtrl.searchTerm != null && narrowItDownCtrl.searchTerm != "") {
+      var promise = MenuSearchService.getMatchedMenuItems(narrowItDownCtrl.searchTerm);
 
-    var promise = MenuSearchService.getMatchedMenuItems(narrowItDownCtrl.searchTerm);
-
-    promise.then(function (result) {
-
-        // return processed items
-        console.log(result);
-        narrowItDownCtrl.found = result;
-        //return foundItems;
-    }).catch(function(error) {
-      console.log("something wrong");
-    });
+      promise.then(function (result) {
+          narrowItDownCtrl.found = [];
+          narrowItDownCtrl.nothingFound = false;
+          // return processed items
+          console.log(result);
+          narrowItDownCtrl.found = result;
+          if (narrowItDownCtrl.found.length == 0) {
+            narrowItDownCtrl.nothingFound = true;
+          }
+          //return foundItems;
+      }).catch(function(error) {
+        console.log("something wrong");
+      });
+    } else {
+      narrowItDownCtrl.nothingFound = true;
+      narrowItDownCtrl.found = [];
+    }
   }
 
   narrowItDownCtrl.remove = function (index) {
