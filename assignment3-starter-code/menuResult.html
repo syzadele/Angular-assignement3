@@ -1,0 +1,20 @@
+<p>
+<table class="table table-striped">
+  <thead class="thisThead">
+        <tr class="thead-dark">
+            <th ng-repeat="(key, value) in found[0]">{{key}}</th>
+            <th ng-show="found.length > 0">Choice</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr ng-repeat="item in found">
+          <td ng-repeat="prop in item">
+            {{prop}}
+          </td>
+          <td>
+            <button class="btn btn-danger" ng-click="onRemove({index: $index});">Don't want this one!</button>
+          </td>
+        </tr>
+   </tbody>
+</table>
+</p>
